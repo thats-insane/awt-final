@@ -17,14 +17,14 @@ const html = `
 		<div id="output"></div>
 		<script>
 			document.addEventListener('DOMContentLoaded', function() {
-				fetch("http://localhost:4000/v1/tokens/authentication", {
+				fetch("http://localhost:4000/api/v1/tokens/authentication", {
 					method: "POST",
 					headers: {
-							'Content-Type': 'application/json'
+						'Content-Type': 'application/json'
 					},
 					body: JSON.stringify({
 						email: 'john@example.com',
-						password: 'mangotree'
+						password: 'password'
 					})
 				}).then( function(response) {
 					response.text().then(function (text) {
@@ -32,8 +32,7 @@ const html = `
 					});
 				}, function(err) {
 					document.getElementById("output").innerHTML = err;
-				}
-				);
+				});
 			});
 		</script>
 	</body>

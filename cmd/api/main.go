@@ -48,7 +48,6 @@ type appDependencies struct {
 	reviewModel data.ReviewModel
 	listModel   data.ListModel
 	tokenModel  data.TokenModel
-	permsModel  data.PermsModel
 	mailer      mailer.Mailer
 	wg          sync.WaitGroup
 }
@@ -109,7 +108,6 @@ func main() {
 		reviewModel: data.ReviewModel{DB: db},
 		listModel:   data.ListModel{DB: db},
 		tokenModel:  data.TokenModel{DB: db},
-		permsModel:  data.PermsModel{DB: db},
 		mailer:      mailer.New(settings.smtp.host, settings.smtp.port, settings.smtp.username, settings.smtp.password, settings.smtp.sender),
 	}
 

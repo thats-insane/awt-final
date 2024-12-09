@@ -10,7 +10,7 @@ import (
 )
 
 /* Embeds the /templates files into the program. */
-//go:embed "templates"
+//go:embed templates/*
 var templateFS embed.FS
 
 /* Connection to the SMTP server */
@@ -33,7 +33,7 @@ func New(host string, port int, username string, password string, sender string)
 /* Sends the activation email to the user */
 func (m Mailer) Send(recipient string, tmplFile string, data any) error {
 	// create email to send
-	tmpl, err := template.New("email").ParseFS(templateFS, "/templates/"+tmplFile)
+	tmpl, err := template.New("email").ParseFS(templateFS, "templates/"+tmplFile)
 	if err != nil {
 		return err
 	}

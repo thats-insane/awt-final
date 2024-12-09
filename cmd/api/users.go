@@ -18,7 +18,7 @@ func (a *appDependencies) createUserHandler(w http.ResponseWriter, r *http.Reque
 		Password string `json:"password"`
 	}
 
-	err := a.readJSON(w, r, incomingData)
+	err := a.readJSON(w, r, &incomingData)
 	if err != nil {
 		a.badRequest(w, r, err)
 		return

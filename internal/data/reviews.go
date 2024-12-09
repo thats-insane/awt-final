@@ -15,7 +15,7 @@ type Review struct {
 	BookID    int64     `json:"book_id"`
 	UserID    int64     `json:"user_id"`
 	Rating    int64     `json:"rating"`
-	Desc      string    `json:"desc"`
+	Desc      string    `json:"description"`
 	CreatedAt time.Time `json:"-"`
 }
 
@@ -26,7 +26,7 @@ type ReviewModel struct {
 /* Add a new review */
 func (r ReviewModel) Insert(review *Review) error {
 	query := `
-		INSERT INTO reviews (book_id, user_id, rating, desc)
+		INSERT INTO reviews (book_id, user_id, rating, description)
 		VALUES ($1, $2, $3, $4)
 		RETURNING id, created_at
 	`
@@ -44,7 +44,7 @@ func (r ReviewModel) Get(id int64) (*Review, error) {
 		return nil, ErrRecordNotFound
 	}
 	query := `
-		SELECT id, book_id, user_id, rating, desc
+		SELECT id, book_id, user_id, rating, description
 		FROM reviews
 		WHERE id = $1
 	`
@@ -68,7 +68,7 @@ func (r ReviewModel) GetUser(id int64) ([]*Review, error) {
 		return nil, ErrRecordNotFound
 	}
 	query := `
-		SELECT id, book_id, user_id, rating, desc
+		SELECT id, book_id, user_id, rating, description
 		FROM reviews
 		WHERE user_id = $1
 	`
@@ -103,7 +103,7 @@ func (r ReviewModel) GetUser(id int64) ([]*Review, error) {
 /* Select all reviews */
 func (r ReviewModel) GetAll(filters Filters) ([]*Review, Metadata, error) {
 	query := fmt.Sprintf(`
-		SELECT id, book_id, user_id, rating, desc
+		SELECT id, book_id, user_id, rating, description
 		FROM reviews
 		ORDER BY %s %s, id ASC
 		LIMIT $1 OFFSET $2
@@ -144,7 +144,7 @@ func (r ReviewModel) GetAll(filters Filters) ([]*Review, Metadata, error) {
 func (r ReviewModel) Update(review *Review) error {
 	query := `
 		UPDATE reviews
-		SET book_id = $1, user_id = $2, rating = $3, desc = $4
+		SET book_id = $1, user_id = $2, rating = $3, description = $4
 		WHERE id = $5
 		RETURNING id
 	`

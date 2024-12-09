@@ -13,7 +13,7 @@ import (
 type List struct {
 	ID         int64  `json:"id"`
 	Name       string `json:"name"`
-	Desc       string `json:"desc"`
+	Desc       string `json:"description"`
 	UserID     int64  `json:"user_id"`
 	BookListID int64  `json:"books"`
 	Status     string `json:"status"`
@@ -32,7 +32,7 @@ type ListModel struct {
 /* Add a new reading list to the database */
 func (l ListModel) Insert(list *List) error {
 	query := `
-		INSERT INTO lists(name, desc, user_id, book_list_id, status)
+		INSERT INTO lists(name, description, user_id, book_list_id, status)
 		VALUES ($1, $2, $3, $4, $5)
 		RETURNING id
 	`
@@ -48,7 +48,7 @@ func (l ListModel) Insert(list *List) error {
 /* Select all reading lists from database */
 func (l ListModel) GetAll(filters Filters) ([]*List, Metadata, error) {
 	query := fmt.Sprintf(`
-		SELECT id, name, desc, user_id, book_list_id, status
+		SELECT id, name, description, user_id, book_list_id, status
 		FROM lists
 		ORDER BY %s %s, id ASC
 		LIMIT $1 OFFSET $2
@@ -109,7 +109,7 @@ func (l ListModel) Get(id int64) (*List, error) {
 	}
 
 	query := `
-		SELECT id, name, desc, user_id, book_list_id, status 
+		SELECT id, name, description, user_id, book_list_id, status 
 		FROM lists
 		WHERE id = $1
 	`
@@ -162,7 +162,7 @@ func (l ListModel) GetBooks(id int64) (*BookList, error) {
 func (l ListModel) Update(list *List) error {
 	query := `
 		UPDATE list
-		SET name = $1, desc = $2, user_id = $3, book_list_id = $4, status = $5
+		SET name = $1, description = $2, user_id = $3, book_list_id = $4, status = $5
 		WHERE id = $6
 		RETURNING id
 	`

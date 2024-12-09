@@ -160,11 +160,14 @@ func (a *appDependencies) enableCORS(next http.Handler) http.Handler {
 					if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
 						w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, PUT, PATCH, DELETE")
 						w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
-					}
-					w.WriteHeader(http.StatusOK)
 
+						w.WriteHeader(http.StatusOK)
+
+						return
+					}
 					break
 				}
+
 			}
 		}
 		next.ServeHTTP(w, r)

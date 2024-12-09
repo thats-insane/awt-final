@@ -71,3 +71,8 @@ func (a *appDependencies) inactiveAccount(w http.ResponseWriter, r *http.Request
 	msg := "your user account must be activated to access this resource"
 	a.errResponseJSON(w, r, http.StatusForbidden, msg)
 }
+
+func (a *appDependencies) invalidCredentials(w http.ResponseWriter, r *http.Request) {
+	msg := "invalid auth credentials"
+	a.errResponseJSON(w, r, http.StatusUnauthorized, msg)
+}
