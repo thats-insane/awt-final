@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/thats-insane/awt-test3/internal/validator"
+	"github.com/thats-insane/awt-final/internal/validator"
 )
 
 type envelope map[string]any
@@ -111,10 +111,10 @@ func (a *appDependencies) readIDParam(r *http.Request) (int64, error) {
 
 func (a *appDependencies) getSingleQueryParameters(queryParameters url.Values, key string, defaultValue string) string {
 	result := queryParameters.Get(key)
-
 	if result == "" {
 		return defaultValue
 	}
+
 	return result
 }
 

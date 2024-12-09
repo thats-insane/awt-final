@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/thats-insane/awt-test3/internal/data"
+	"github.com/thats-insane/awt-final/internal/data"
 )
 
 type ctxKey string

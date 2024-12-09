@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/thats-insane/awt-test3/internal/data"
-	"github.com/thats-insane/awt-test3/internal/validator"
+	"github.com/thats-insane/awt-final/internal/data"
+	"github.com/thats-insane/awt-final/internal/validator"
 )
 
 /* Add a new review */

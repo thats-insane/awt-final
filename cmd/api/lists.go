@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/thats-insane/awt-test3/internal/data"
-	"github.com/thats-insane/awt-test3/internal/validator"
+	"github.com/thats-insane/awt-final/internal/data"
+	"github.com/thats-insane/awt-final/internal/validator"
 )
 
 /* Create a new list */
@@ -46,7 +46,7 @@ func (a *appDependencies) createListHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	headers := make(http.Header)
-	headers.Set("Location", fmt.Sprintf("/list/%d", list.ID))
+	headers.Set("Location", fmt.Sprintf("api/v1/list/%d", list.ID))
 	data := envelope{
 		"list": list,
 	}

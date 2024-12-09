@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/thats-insane/awt-test3/internal/data"
-	"github.com/thats-insane/awt-test3/internal/validator"
+	"github.com/thats-insane/awt-final/internal/data"
+	"github.com/thats-insane/awt-final/internal/validator"
 )
 
 /* Register a new user, create their token and send them an activation email */
@@ -232,6 +232,82 @@ func (a *appDependencies) displayUserReviewsHandler(w http.ResponseWriter, r *ht
 			"bookID": review.BookID,
 		}
 		data[fmt.Sprintf("review%d", i)] = reviews
+	}
+
+	err = a.writeJSON(w, http.StatusOK, data, nil)
+	if err != nil {
+		a.serverErr(w, r, err)
+		return
+	}
+}
+
+func (a *appDependencies) updateUserPasswordHandler(w http.ResponseWriter, r *http.Request) {
+	var incomingData struct {
+		Password string `json:"password"`
+		Token    string `json:"token"`
+	}
+	err := a.readJSON(w, r, &incomingData)
+	if err != nil {
+		a.badRequest(w, r, err)
+		return
+	}
+
+	v := validator.New()
+	data.ValidateTokenPlaintext(v, incomingData.Token)
+	if !v.IsEmpty() {
+		a.failedValidation(w, r, v.Errors)
+		return
+	}
+	data.ValidatePasswordPlaintext(v, incomingData.Password)
+	if !v.IsEmpty() {
+		a.failedValidation(w, r, v.Errors)
+		return
+	}
+
+	user, err := a.userModel.GetForToken(data.ScopeReset, incomingData.Token)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			v.AddError("token", "invalid/expired token")
+			a.failedValidation(w, r, v.Errors)
+		default:
+			a.serverErr(w, r, err)
+		}
+		return
+	}
+
+	user, err = a.userModel.Get(user.ID)
+	if err != nil {
+		a.notFound(w, r)
+		return
+	}
+
+	err = user.Password.Set(incomingData.Password)
+	if err != nil {
+		a.serverErr(w, r, err)
+		return
+	}
+
+	data.ValidateUser(v, user)
+	if !v.IsEmpty() {
+		a.failedValidation(w, r, v.Errors)
+		return
+	}
+
+	err = a.userModel.Update(user)
+	if err != nil {
+		a.serverErr(w, r, err)
+		return
+	}
+
+	err = a.tokenModel.DeleteAllForUser(data.ScopeReset, user.ID)
+	if err != nil {
+		a.serverErr(w, r, err)
+		return
+	}
+
+	data := envelope{
+		"message": "password successfully reset",
 	}
 
 	err = a.writeJSON(w, http.StatusOK, data, nil)

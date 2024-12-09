@@ -1,4 +1,4 @@
-module github.com/thats-insane/awt-test3
+module github.com/thats-insane/awt-final
 
 go 1.22.1
 

@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/thats-insane/awt-test3/internal/data"
-	"github.com/thats-insane/awt-test3/internal/validator"
+	"github.com/thats-insane/awt-final/internal/data"
+	"github.com/thats-insane/awt-final/internal/validator"
 	"golang.org/x/time/rate"
 )
 
@@ -145,4 +145,28 @@ func (a *appDependencies) requireActivated(next http.HandlerFunc) http.HandlerFu
 		next.ServeHTTP(w, r)
 	})
 	return a.requireAuth(fn)
+}
+
+func (a *appDependencies) enableCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Vary", "Origin")
+		w.Header().Add("Vary", "Access-Control-Request-Method")
+		origin := r.Header.Get("Origin")
+
+		if origin != "" {
+			for i := range a.config.cors.trustedOrigins {
+				if origin == a.config.cors.trustedOrigins[i] {
+					w.Header().Set("Access-Control-Allow-Origin", origin)
+					if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
+						w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, PUT, PATCH, DELETE")
+						w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
+					}
+					w.WriteHeader(http.StatusOK)
+
+					break
+				}
+			}
+		}
+		next.ServeHTTP(w, r)
+	})
 }

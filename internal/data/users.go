@@ -7,7 +7,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/thats-insane/awt-test3/internal/validator"
+	"github.com/thats-insane/awt-final/internal/validator"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -40,7 +40,7 @@ func (u *User) IsAnon() bool {
 /* Insert a user into the database */
 func (u UserModel) Insert(user *User) error {
 	query := `
-	INSERT INTO users (username, email, password_hash, activated)
+	INSERT INTO users (username, email, password, activated)
 	VALUES ($1, $2, $3, $4)
 	RETURNING id, created_at, version
 	`
@@ -64,7 +64,7 @@ func (u UserModel) Insert(user *User) error {
 /* Select a user based on their ID */
 func (u UserModel) Get(id int64) (*User, error) {
 	query := `
-		SELECT id, created_at, username, email, password_hash, activated, version
+		SELECT id, created_at, username, email, password, activated, version
 		FROM users
 		WHERE id = $1
 	`
@@ -89,7 +89,7 @@ func (u UserModel) Get(id int64) (*User, error) {
 func (u UserModel) Update(user *User) error {
 	query := `
 		UPDATE users 
-        SET username = $1, email = $2, password_hash = $3, activated = $4, version = version + 1
+        SET username = $1, email = $2, password = $3, activated = $4, version = version + 1
         WHERE id = $5 AND version = $6
         RETURNING version
 	`
@@ -170,7 +170,7 @@ func ValidateUser(v *validator.Validator, user *User) {
 func (u UserModel) GetForToken(scope string, plaintext string) (*User, error) {
 	hash := sha256.Sum256([]byte(plaintext))
 	query := `
-		SELECT users.id, users.created_at, users.username, users.email, users.password_hash, users.activated, users.version
+		SELECT users.id, users.created_at, users.username, users.email, users.password, users.activated, users.version
         FROM users
         INNER JOIN tokens
         ON users.id = tokens.user_id
@@ -194,5 +194,29 @@ func (u UserModel) GetForToken(scope string, plaintext string) (*User, error) {
 			return nil, err
 		}
 	}
+	return &user, nil
+}
+
+func (u UserModel) GetByEmail(email string) (*User, error) {
+	query := `
+		SELECT id, created_at, username, email, password, activated, version
+		FROM users
+		WHERE email = $1
+   `
+	var user User
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := u.DB.QueryRowContext(ctx, query, email).Scan(&user.ID, &user.CreatedAt, &user.Username, &user.Email, &user.Password.hash, &user.Activated, &user.Version)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+
 	return &user, nil
 }

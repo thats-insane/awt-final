@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/thats-insane/awt-test3/internal/data"
-	"github.com/thats-insane/awt-test3/internal/validator"
+	"github.com/thats-insane/awt-final/internal/data"
+	"github.com/thats-insane/awt-final/internal/validator"
 )
 
 /* Create a new book */
@@ -246,7 +246,11 @@ func (a *appDependencies) searchBooksHandler(w http.ResponseWriter, r *http.Requ
 	queryParametersData.Title = a.getSingleQueryParameters(queryParameters, "title", "")
 	queryParametersData.Author = a.getSingleQueryParameters(queryParameters, "author", "")
 	queryParametersData.Genre = a.getSingleQueryParameters(queryParameters, "genre", "")
+	queryParametersData.Filters.Sort = a.getSingleQueryParameters(queryParameters, "sort", "id")
+	queryParametersData.Filters.SortSafeList = []string{"id", "title", "author", "genre", "-id", "-title", "-author", "-genre"}
 	v := validator.New()
+	queryParametersData.Filters.Page = a.getSingleIntegerParameters(queryParameters, "page", 1, v)
+	queryParametersData.Filters.PageSize = a.getSingleIntegerParameters(queryParameters, "page_size", 10, v)
 	data.ValidateFilters(v, queryParametersData.Filters)
 	if !v.IsEmpty() {
 		a.failedValidation(w, r, v.Errors)

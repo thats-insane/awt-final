@@ -8,11 +8,12 @@ import (
 	"encoding/base32"
 	"time"
 
-	"github.com/thats-insane/awt-test3/internal/validator"
+	"github.com/thats-insane/awt-final/internal/validator"
 )
 
 const ScopeActivation = "activation"
 const ScopeAuthentication = "authentication"
+const ScopeReset = "password-reset"
 
 type Token struct {
 	Plaintext string
