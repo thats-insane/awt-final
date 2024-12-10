@@ -16,7 +16,6 @@ func (a *appDependencies) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/api/v1/books", a.requireActivated(a.listBooksHandler))
 	router.HandlerFunc(http.MethodGet, "/api/v1/books/search", a.requireActivated(a.searchBooksHandler))
 	// router.HandlerFunc(http.MethodGet, "/api/v1/books/:id", a.requireActivated(a.displayBookHandler))
-	// router.HandlerFunc(http.MethodPut, "/api/v1/books/:id", a.requireActivated(a.updateBookHandler))
 
 	router.HandlerFunc(http.MethodGet, "/api/v1/lists", a.requireActivated(a.listListsHandler))
 	router.HandlerFunc(http.MethodGet, "/api/v1/lists/:id", a.requireActivated(a.displayListHandler))
@@ -34,7 +33,7 @@ func (a *appDependencies) routes() http.Handler {
 	router.HandlerFunc(http.MethodPost, "/api/v1/tokens/authentication", a.createAuthTokenHandler)
 
 	router.HandlerFunc(http.MethodPut, "/api/v1/users/activated", a.activateUserHandler)
-
+	// router.HandlerFunc(http.MethodPut, "/api/v1/books/:id", a.requireActivated(a.updateBookHandler))
 	router.HandlerFunc(http.MethodPut, "/api/v1/lists/:id", a.requireActivated(a.updateListHandler))
 	router.HandlerFunc(http.MethodPut, "/api/v1/reviews/:id", a.requireActivated(a.updateReviewHandler))
 	router.HandlerFunc(http.MethodPut, "/api/v1/users/password", a.updateUserPasswordHandler)

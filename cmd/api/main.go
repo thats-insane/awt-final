@@ -84,7 +84,7 @@ func main() {
 	flag.IntVar(&settings.smtp.port, "smtp-port", 25, "SMTP port")
 	flag.StringVar(&settings.smtp.username, "smtp-username", "6b4f4a0f1e81c5", "SMTP username")
 	flag.StringVar(&settings.smtp.password, "smtp-password", "7a8cb475eeb545", "SMTP password")
-	flag.StringVar(&settings.smtp.sender, "smtp-sender", "Book Club Community <no-reply@commentscommunity.2021154337.net>", "SMTP sender")
+	flag.StringVar(&settings.smtp.sender, "smtp-sender", "Book Club Community <no-reply@bookclubcommunity.2021154337.net>", "SMTP sender")
 	flag.Func("cors-trusted-origins", "Trusted CORS origins", func(s string) error {
 		settings.cors.trustedOrigins = strings.Fields(s)
 		return nil

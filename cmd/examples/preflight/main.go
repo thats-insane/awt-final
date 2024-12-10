@@ -23,8 +23,8 @@ const html = `
 						'Content-Type': 'application/json'
 					},
 					body: JSON.stringify({
-						email: 'john@example.com',
-						password: 'password'
+						email: '2021154337@ub.edu.bz',
+						password: 'password2'
 					})
 				}).then( function(response) {
 					response.text().then(function (text) {
@@ -40,7 +40,7 @@ const html = `
 `
 
 func main() {
-	addr := flag.String("addr", ":9000", "Server address")
+	addr := flag.String("addr", ":9004", "Server address")
 	flag.Parse()
 
 	log.Printf("starting server of %s", *addr)
